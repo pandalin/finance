@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.finance.dao.ConsumeMapper">
+	
+	<!-- 消费记录 -->
+	<resultMap type="com.company.finance.bean.Consume" id="consumeMap">
+		<id property="consume_id" column="consume_id"/>
+		<result property="consume_type" column="consume_type"/>
+		<result property="consume_money" column="consume_money"/>
+		<result property="consume_date" column="consume_date"/>
+		<result property="consume_desc" column="consume_desc"/>
+		<association property="consume_user" column="consume_user" javaType="com.company.finance.bean.User">
+			<id property="user_id" column="user_id"/>
+			<result property="user_name" column="user_name"/>
+		</association>
+	</resultMap>
+	
+	<sql id="consumeSql">
+		c.consume_id		as consume_id,
+		c.consume_type		as consume_type,
+		c.consume_money		as consume_money,
+		c.consume_date		as consume_date,
+		c.consume_desc		as consume_desc,
+		c.consume_user		as consume_user
+	</sql>
+	
+	<sql id="userSql">
+		u.user_id			as user_id,
+		u.user_name			as user_name
+	</sql>
+	
+	<select id="findAll" parameterType="map" resultMap="consumeMap">
+		select <include refid="consumeSql"/>,<include refid="userSql"/>
+		from pub_consume c
+		left join pub_user u on c.consume_user=u.user_id
+	</select>
+	
+	<select id="getCounts" parameterType="map" resultType="int">
+		select count(*) from pub_consume
+	</select>
+	
+	<insert id="addEntity" parameterType="com.company.finance.bean.Consume">
+		insert into pub_consume(consume_id,consume_type,consume_money,consume_date,consume_desc,consume_user)
+		values(
+			uuid(),
+			#{consume_type},
+			#{consume_money,jdbcType=DOUBLE},
+			#{consume_date,jdbcType=TIMESTAMP},
+			#{consume_desc,jdbcType=VARCHAR},
+			#{consume_user.user_id,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 月度统计 -->
+	<select id="selectConsumeGroupByMonth" parameterType="map" resultType="map">
+		select
+			date_format(c.consume_date,'%m') 	as month,
+			date_format(c.consume_date,'%Y-%m') as month_,
+			sum(c.consume_money) 				as money,
+			u.user_name 						as user_name
+		from pub_consume c
+		left join pub_user u on c.consume_user=u.user_id
+		where date_format(c.consume_date,'%Y')=#{year}
+		group by month_
+	</select>
+	
+</mapper>

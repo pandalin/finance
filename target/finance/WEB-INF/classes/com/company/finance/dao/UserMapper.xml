@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.finance.dao.UserMapper">
+	
+	<insert id="addEntity" parameterType="com.company.finance.bean.User">
+		<selectKey keyProperty="user_id" order="BEFORE" resultType="String">
+			select uuid() from dual
+		</selectKey>
+		insert into pub_user(
+				user_id,
+				user_code,
+				user_name,
+				user_password,
+				user_status,
+				user_date
+		)
+		values(
+			#{user_id},
+			#{user_code},
+			#{user_name},
+			#{user_password},
+			#{user_status},
+			#{user_date,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<delete id="deleteEntity" parameterType="String">
+		delete from pub_user where user_id=#{userid}
+	</delete>
+	
+	<select id="getObjectById" parameterType="String" resultType="com.company.finance.bean.User">
+		select u.* from pub_user u where u.user_id=#{userid}
+	</select>
+	
+	<select id="loadUserByCode" parameterType="String" resultType="com.company.finance.bean.User">
+		select u.* from pub_user u where u.user_code=#{usercode}
+	</select>
+	
+	<select id="queryAll" resultType="com.company.finance.bean.User">
+		select u.* from pub_user u
+	</select>
+	
+	<sql id="userWhereSql">
+		<where>
+			<if test="user_code!=null">and u.user_code=#{user_code}</if>
+			<if test="user_name!=null">and u.user_name=#{user_name}</if>
+			<if test="keyword!=null">and ( 
+				u.user_code like concat ('%',concat(#{keyword},'%'))
+				or 
+				u.user_name like concat ('%',concat(#{keyword},'%'))
+			)
+			</if>
+		</where>
+	</sql>
+	<select id="findAll" parameterType="map" resultType="com.company.finance.bean.User">
+		select u.* from pub_user u
+		<include refid="userWhereSql"/>
+	</select>
+	
+	<select id="getCounts" parameterType="map" resultType="int">
+		select count(u.user_id) from pub_user u
+		<include refid="userWhereSql"/>
+	</select>
+	
+	
+	<!-- 这种方式得用com.company.finance.dialect.MybatisPageableInterceptor -->
+	<select id="findUserByPage" parameterType="map" resultType="com.company.finance.bean.User">
+		select u.* from pub_user u
+		<where>
+			<if test="user_name!=null">and u.user_name=#{map.user_name}</if>
+		</where>
+	</select>
+	
+</mapper>

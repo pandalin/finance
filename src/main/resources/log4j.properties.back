@@ -1,0 +1,16 @@
+#配置控制台 
+log4j.rootLogger=warn,stdout,LogFile
+#log4j.addivity.org.apache=true
+
+# CONSOLE 
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender 
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout 
+log4j.appender.stdout.layout.ConversionPattern=[%5p] [%-d{yyyy-MM-dd HH:mm:ss}] [%C.%M] %m%n 
+log4j.appender.LogFile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.LogFile.File=${catalina.home}/logs/finance.log
+log4j.appender.LogFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.LogFile.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %l %m%n
+
+log4j.logger.java.sql.Connection = DEBUG
+log4j.logger.java.sql.Statement = DEBUG
+log4j.logger.java.sql.PreparedStatement = DEBUG

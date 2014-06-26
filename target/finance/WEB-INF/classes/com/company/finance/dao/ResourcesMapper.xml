@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.finance.dao.ResourcesMapper">
+	
+	<insert id="addEntity" parameterType="com.company.finance.bean.Resources">
+		<selectKey keyProperty="id" order="BEFORE" resultType="String">
+			select uuid() from dual
+		</selectKey>
+		insert into pub_resources(
+				id,
+				resource_name,
+				resource_type,
+				resource_parent,
+				resource_url,
+				resource_desc,
+				resource_status,
+				resource_priority
+		)
+		values(
+			#{id},
+			#{resource_name},
+			#{resource_type},
+			#{resource_parent},
+			#{resource_url},
+			#{resource_desc},
+			#{resource_status},
+			#{resource_priority}
+		)
+	</insert>
+	
+	<update id="modifyEntity" parameterType="com.company.finance.bean.Resources">
+		update pub_resources
+		<set>
+			<if test="resource_name!=null and resource_name!=''">resource_name=#{resource_name},</if>
+			<if test="resource_type!=null and resource_type!=''">resource_type=#{resource_type},</if>
+			<if test="resource_parent!=null and resource_parent!=''">resource_parent=#{resource_parent},</if>
+			<if test="resource_url!=null and resource_url!=''">resource_url=#{resource_url},</if>
+			<if test="resource_desc!=null and resource_desc!=''">resource_desc=#{resource_desc},</if>
+			<if test="resource_status!=null and resource_status!=''">resource_status=#{resource_status},</if>
+			<if test="resource_priority!=null and resource_priority!=''">resource_priority=#{resource_priority}</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<sql id="resourcesSql">
+		r.id					as 		id,
+		r.resource_name			as 		resource_name,
+		r.resource_type			as 		resource_type,
+		r.resource_parent		as 		resource_parent,
+		r.resource_url			as 		resource_url,
+		r.resource_desc			as 		resource_desc,
+		r.resource_status		as 		resource_status,
+		r.resource_priority		as 		resource_priority
+	</sql>
+	<sql id="resourcesWhereSql">
+		<where>
+			<if test="resource_type!=null">and r.resource_type=#{resource_type}</if>
+			<if test="resource_status!=null">and r.resource_status=#{resource_status}</if>
+		</where>
+	</sql>
+	
+	<select id="getAuthoritiesResourcesList" parameterType="map" resultType="com.company.finance.bean.Resources">
+		select distinct <include refid="resourcesSql"/>
+		from pub_resources r,pub_authorities_resources par,pub_authorities a
+		where a.id= par.authority_id and par.resource_id = r.id
+		and a.id=#{authid}		
+	</select>
+	
+	<select id="getObjectById" parameterType="String" resultType="com.company.finance.bean.Resources">
+		select <include refid="resourcesSql"/> from pub_resources r where r.id=#{id}
+	</select>
+	
+	<select id="queryAll" resultType="com.company.finance.bean.Resources">
+		select <include refid="resourcesSql"/> from pub_resources r where r.resource_status=0
+	</select>
+	
+	<select id="findAll" parameterType="map" resultType="com.company.finance.bean.Resources">
+		select <include refid="resourcesSql"/> from pub_resources r
+		<include refid="resourcesWhereSql"/>
+	</select>
+	
+	<select id="getCounts" parameterType="map" resultType="int">
+		select count(*) from pub_resources r
+		<include refid="resourcesWhereSql"/>
+	</select>
+	
+	
+</mapper>

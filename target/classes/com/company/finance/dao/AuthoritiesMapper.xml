@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.finance.dao.AuthoritiesMapper">
+	
+	<insert id="addEntity" parameterType="com.company.finance.bean.Authorities">
+		<selectKey keyProperty="id" order="BEFORE" resultType="String">
+			select uuid() from dual
+		</selectKey>
+		insert into pub_authorities(
+				id,
+				authority_code,
+				authority_name,
+				authority_desc,
+				authority_status
+		)
+		values(
+			#{id},
+			#{authority_code},
+			#{authority_name},
+			#{authority_desc},
+			#{authority_status}
+		)
+	</insert>
+	
+	<select id="getUserAuthoritiesList" parameterType="map" resultType="com.company.finance.bean.Authorities">
+		select a.*
+		from pub_authorities a,pub_role_authorities pra,
+		pub_role r,pub_user_role pur,pub_user u
+		where a.id= pra.authority_id and pra.role_id = r.id and a.authority_status = '0'
+		and r.id=pur.role_id and pur.user_id = u.user_id and r.role_status = '0'
+		and u.user_id=#{userid}		
+	</select>
+	
+	<select id="queryAll"  resultType="com.company.finance.bean.Authorities">
+		select a.* from pub_authorities a
+	</select>
+	
+	<select id="findAll" parameterType="map" resultType="com.company.finance.bean.Authorities">
+		select pa.* from pub_authorities pa
+	</select>
+	
+	<select id="getCounts" parameterType="map" resultType="int">
+		select count(pa.id) from pub_authorities pa
+	</select>
+	
+	<!-- 新增角色权限 -->
+	<insert id="addRoleToAuthorities" parameterType="com.company.finance.bean.RoleToAuthorities">
+		insert into pub_role_authorities(id,role_id,authority_id)
+		values(uuid(),#{role_id},#{authority_id})
+	</insert>
+	
+	<!-- 删除角色权限 -->
+	<delete id="deleteRoleAuth" parameterType="String">
+		delete from pub_role_authorities where role_id=#{roleid}
+	</delete>
+	
+	<!-- 角色的权限列表 -->
+	<select id="queryAuthByRoleId" parameterType="String"  resultType="com.company.finance.bean.Authorities">
+		select a.* from pub_authorities a,pub_role_authorities pra
+		where a.id=pra.authority_id and a.authority_status = '0'
+		and pra.role_id=#{roleid}
+	</select>
+	
+	<!-- 新增权限资源 -->
+	<insert id="addAuthoritiesToResources" parameterType="com.company.finance.bean.AuthoritiesToResources">
+		insert into pub_authorities_resources(id,authority_id,resource_id)
+		values(uuid(),#{authority_id},#{resource_id})
+	</insert>
+	
+	<!-- 删除权限资源 -->
+	<delete id="deleteAuthResources" parameterType="String">
+		delete from pub_authorities_resources where authority_id=#{authid}
+	</delete>
+	
+	
+	
+</mapper>
