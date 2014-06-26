@@ -6,7 +6,6 @@ import com.company.finance.bean.User;
 import com.company.finance.security.UserDetails;
 
 /**
- * 
  * <p> 
  *  常量
  *
