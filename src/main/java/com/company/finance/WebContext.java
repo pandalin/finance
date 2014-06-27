@@ -8,7 +8,6 @@ import com.company.finance.security.UserDetails;
 /**
  * <p> 
  *  常量
- *
  * @author  linxiaomin@sina.cn  
  * @date    2014年6月23日 下午1:07:12
  * @version v1.0
