@@ -1,7 +1,11 @@
 package com.company.finance.aspect;
 
+import java.util.Arrays;
+
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,16 +22,50 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAopAspect {
 	
-	private Logger	logger = LoggerFactory.getLogger(getClass());
-	
 	@After(value="execution(* com.company.finance.service.impl.*.*(..))")
 	public void after(JoinPoint joinPoint) {
 		String methodName = joinPoint.getSignature().getName();
 		String className = joinPoint.getTarget().getClass().getSimpleName();
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("进入切面类");
-			logger.debug("类名:"+className+"方法名:"+methodName);
+		final Logger log = getLog(joinPoint);
+		if (log.isDebugEnabled()) {
+			log.debug("进入切面类");
+			log.debug("类名:"+className+"方法名:"+methodName);
 		}
 	}
+	
+	@Around("(execution (public * com.company.finance.service.impl..*.*(..)))")
+	public Object traceMethod(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		Object returnVal = null;
+        final Logger log = getLog(proceedingJoinPoint);
+        final String methodName = proceedingJoinPoint.getSignature().getName();
+
+        try {
+            if (log.isTraceEnabled()) {
+                final Object[] args = proceedingJoinPoint.getArgs();
+                final String arguments;
+                if (args == null || args.length == 0) {
+                    arguments = "";
+                } else {
+                    arguments = Arrays.deepToString(args);
+                }
+                log.trace("Entering method [" + methodName + " with arguments [" + arguments + "]");
+            }
+            returnVal = proceedingJoinPoint.proceed();
+            return returnVal;
+        } finally {
+            if (log.isTraceEnabled()) {
+                log.trace("Leaving method [" + methodName + "] with return value [" + (returnVal != null ? returnVal.toString() : "null") + "].");
+            }
+        }
+	}
+	
+	protected Logger getLog(final JoinPoint joinPoint) {
+        final Object target = joinPoint.getTarget();
+
+        if (target != null) {
+            return LoggerFactory.getLogger(target.getClass());
+        }
+
+        return LoggerFactory.getLogger(getClass());
+    }
 }

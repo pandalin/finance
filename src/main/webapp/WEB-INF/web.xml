@@ -33,7 +33,7 @@
 		<param-value>
 			classpath:spring/spring-context.xml,
 			classpath:spring/spring-db.xml,
-			classpath:spring/spring-security.xml
+			classpath:spring/spring-security-cas.xml
 		</param-value>
 	</context-param>
 

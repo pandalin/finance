@@ -5,6 +5,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -19,6 +21,10 @@ public class RoleServiceTest {
 
 	@Autowired
 	private RoleService roleService;
+	
+	@Autowired
+	
+	private Pageable pageable;
 
 	@org.junit.Test
 	public void testListRole() {
