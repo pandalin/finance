@@ -13,6 +13,7 @@ import org.springframework.web.util.WebUtils;
  * @author piaohailin
  * 
  */
+@Deprecated
 public abstract class LogbackWebConfigurer {
 
     /** Parameter specifying the location of the logback config file */

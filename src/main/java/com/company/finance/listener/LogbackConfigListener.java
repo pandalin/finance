@@ -7,6 +7,7 @@ import javax.servlet.ServletContextListener;
  * @author lin
  *
  */
+@Deprecated
 public class LogbackConfigListener implements ServletContextListener {
 
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {

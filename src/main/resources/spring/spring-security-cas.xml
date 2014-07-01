@@ -1,0 +1,146 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<beans:description>SpringSecurity安全配置</beans:description>
+	
+    <!-- <debug /> -->
+	
+	 <!-- 不要过滤图片等静态资源,其中**代表可以跨越目录,*不可以跨越目录
+	   这样写是为了防止未登录时访问http://localhost:8080/finance/common/报404错误,会进入系统后台 -->
+	
+	<http pattern="/**/*.jpg" security="none" />
+	<http pattern="/**/*.jpeg" security="none" />
+	<http pattern="/**/*.png" security="none" />
+	<http pattern="/**/*.gif" security="none" />
+	<http pattern="/**/*.ico" security="none" />
+	<http pattern="/**/*.html" security="none" />
+	<http pattern="/**/*.eot" security="none" />
+	<http pattern="/**/*.svg" security="none" />
+	<http pattern="/**/*.ttf" security="none" />
+	<http pattern="/**/*.woff" security="none" />
+	<http pattern="/**/*.css" security="none" />
+	<http pattern="/**/*.js" security="none" />
+	
+	<http pattern="/index.jsp" security="none" />
+	<http pattern="/loginfailed" security="none" />
+	<!-- 使用cas时要过滤login,用cas的 -->
+	<!-- <http pattern="/login" security="none" /> -->
+	<http pattern="/admin/druid/**" security="none" />
+
+	<global-method-security pre-post-annotations="enabled" />
+
+	<http auto-config="false" use-expressions="true" entry-point-ref="casAuthenticationEntryPoint">
+		
+		<access-denied-handler error-page="/error/error/403"/>
+		<anonymous enabled="false"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <logout logout-success-url="${logout-success-url}" invalidate-session="true" logout-url="${logout-url}" delete-cookies="JSESSIONID,CURRENT_MENU"/>
+       
+        <!-- 用cas的登录 -->
+        <!-- <custom-filter ref="myUsernamePasswordAuthticationFilter" position="FORM_LOGIN_FILTER" /> -->
+        
+        <custom-filter ref="concurrencyFilter" position="CONCURRENT_SESSION_FILTER"/>
+        <custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+        <custom-filter ref="casFilter" position="CAS_FILTER"/>
+        
+        <session-management  invalid-session-url="${loginURL}" session-authentication-strategy-ref="compositeSessionAuthenticationStrategy"/>
+	</http>
+	
+	<!-- 登录成功后返回的地址 -->
+	<beans:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+		<beans:property name="service" value="http://localhost:8080/finance/j_spring_cas_security_check"/>
+		<beans:property name="sendRenew" value="false"/>
+	</beans:bean>
+	
+	<!-- CAS认证切入点，声明cas服务器端登录的地址 -->
+	<beans:bean id="casAuthenticationEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<beans:property name="loginUrl" value="https://www.finance.com:8089/cas/login" />
+		<beans:property name="serviceProperties" ref="serviceProperties" />
+	</beans:bean>
+	
+	 <!-- cas 认证过滤器 --> 
+	<beans:bean id="casFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
+  		<beans:property name="authenticationManager" ref="authenticationManager"/>
+  		<!-- <beans:property name="requiresAuthenticationRequestMatcher" ref="requiresAuthenticationRequestMatcher" /> -->
+  		<beans:property name="sessionAuthenticationStrategy" ref="compositeSessionAuthenticationStrategy" />
+	</beans:bean>
+	
+	<beans:bean id="myUsernamePasswordAuthticationFilter" class="com.company.finance.security.MyUsernamePasswordAuthticationFilter">
+		<beans:property name="successUrl" value="/welcome" />
+		<beans:property name="failureUrl" value="/loginfailed" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="requiresAuthenticationRequestMatcher" ref="requiresAuthenticationRequestMatcher" />
+		<beans:property name="sessionAuthenticationStrategy" ref="compositeSessionAuthenticationStrategy" />
+	</beans:bean>
+	
+	<beans:bean id="requiresAuthenticationRequestMatcher" class="org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter$FilterProcessUrlRequestMatcher">
+		<beans:constructor-arg name="filterProcessesUrl" value="${filterProcessesUrl}"/>
+	</beans:bean>
+	
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+	
+	<beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+		<beans:constructor-arg name="expiredUrl" value="${loginURL}" />
+	</beans:bean>
+	
+	<beans:bean id="compositeSessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+		<beans:constructor-arg>
+			<beans:list>
+				<beans:bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+					<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+					<beans:property name="maximumSessions" value="${maximumSessions}" />
+					<beans:property name="exceptionIfMaximumExceeded" value="${exceptionIfMaximumExceeded}" />
+				</beans:bean>
+				<beans:bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy"/>
+				<beans:bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+					<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
+				</beans:bean>
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+	
+	<!-- 在认证管理器中注册cas认证提供器 -->
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="casAuthenticationProvider"/>
+		<!-- 用cas的验证 -->
+		<!-- <authentication-provider user-service-ref="userService">
+			<password-encoder ref="passwordEncoder"/>
+		</authentication-provider> -->
+	</authentication-manager>
+	
+	<!-- cas认证提供器，定义客户端的验证方式 --> 
+	<beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+		<beans:property name="ticketValidator" ref="ticketValidator"/>
+		<beans:property name="serviceProperties" ref="serviceProperties"/>
+		<beans:property name="key" value="finance"/>
+		<beans:property name="authenticationUserDetailsService" ref="authenticationUserDetailsService"/>
+	</beans:bean>
+	
+	<beans:bean id="authenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+		<beans:property name="userDetailsService" ref="userService"/>
+	</beans:bean>
+	
+	<beans:bean id="ticketValidator" class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+		<beans:constructor-arg name="casServerUrlPrefix" value="https://www.finance.com:8089/cas/"/>
+	</beans:bean>
+	
+	<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<!-- 验证提示信息 -->
+	<beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+  		<beans:property name="basenames" value="classpath:messages/messages"/>
+  		<beans:property name="defaultEncoding" value="UTF-8"/>
+  		<!-- 60秒 -->
+  		<beans:property name="cacheSeconds" value="60"/>
+	</beans:bean>
+	
+</beans:beans>

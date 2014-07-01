@@ -33,14 +33,14 @@ public class LogAopAspect {
 		}
 	}
 	
-	@Around("(execution (public * com.company.finance.service.impl..*.*(..)))")
+	@Around(value="execution (public * com.company.finance.service.impl.*.*(..))")
 	public Object traceMethod(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		Object returnVal = null;
         final Logger log = getLog(proceedingJoinPoint);
         final String methodName = proceedingJoinPoint.getSignature().getName();
 
         try {
-            if (log.isTraceEnabled()) {
+            if (log.isDebugEnabled()) {
                 final Object[] args = proceedingJoinPoint.getArgs();
                 final String arguments;
                 if (args == null || args.length == 0) {
@@ -48,13 +48,13 @@ public class LogAopAspect {
                 } else {
                     arguments = Arrays.deepToString(args);
                 }
-                log.trace("Entering method [" + methodName + " with arguments [" + arguments + "]");
+                log.debug("Entering method [" + methodName + "] with arguments [" + arguments + "]");
             }
             returnVal = proceedingJoinPoint.proceed();
             return returnVal;
         } finally {
-            if (log.isTraceEnabled()) {
-                log.trace("Leaving method [" + methodName + "] with return value [" + (returnVal != null ? returnVal.toString() : "null") + "].");
+            if (log.isDebugEnabled()) {
+                log.debug("Leaving method [" + methodName + "] with return value [" + (returnVal != null ? returnVal.toString() : "null") + "].");
             }
         }
 	}

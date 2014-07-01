@@ -17,6 +17,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
  * @author piaohailin
  * 
  */
+@Deprecated
 public abstract class LogbackConfigurer {
 
     /** Pseudo URL prefix for loading from the class path: "classpath:" */
