@@ -7,7 +7,9 @@
 <title>Finance</title>
 </head>
 <body>
-	<jsp:forward page="/login" />
-	
+	<!-- 不要cas时开启springsecurity login -->
+	<%-- <jsp:forward page="/login" /> --%>
+	<!-- 用cas的时候,访问项目，验证通过后直接进入主页 -->
+	<jsp:forward page="/welcome" />
 </body>
 </html>
