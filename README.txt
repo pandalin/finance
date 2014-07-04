@@ -42,3 +42,4 @@ springsecurity表设计采用了7张表，具体可参加finance.sql初始化语
 		 */ 
 	git：
 		http://download.tortoisegit.org/tgit
+CAS证书配置：http://www.kafeitu.me/sso/2010/11/05/sso-cas-full-course.html
