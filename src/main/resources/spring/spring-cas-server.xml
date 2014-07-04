@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	
+	<description>CAS服务端的deployerConfigContext.xml,此处自定义了数据库认证方式,采用springsecurity的加密方式</description>	
+	
+
+	<bean id="authenticationManager" class="org.jasig.cas.authentication.AuthenticationManagerImpl">
+		
+
+		<property name="credentialsToPrincipalResolvers">
+			<list>
+				
+				<bean class="org.jasig.cas.authentication.principal.UsernamePasswordCredentialsToPrincipalResolver" >
+					<property name="attributeRepository" ref="attributeRepository" />
+				</bean>
+				
+				<bean class="org.jasig.cas.authentication.principal.HttpBasedServiceCredentialsToPrincipalResolver" />
+			</list>
+		</property>
+
+		<property name="authenticationHandlers">
+			<list>
+				<bean class="org.jasig.cas.authentication.handler.support.HttpBasedServiceCredentialsAuthenticationHandler"
+					p:httpClient-ref="httpClient" />
+				
+				<!--这种方式是用户名和密码相同即认证通过
+				<bean class="org.jasig.cas.authentication.handler.support.SimpleTestUsernamePasswordAuthenticationHandler" />-->
+				
+				<!--这种方式是数据库认证,MyQueryDatabaseAuthenticationHandler是自定义的-->
+				<bean class="org.jasig.cas.adaptors.jdbc.MyQueryDatabaseAuthenticationHandler">
+					<property name="dataSource" ref="dataSource" ></property>
+					<property name="sql" value="select user_password from pub_user where user_code=?" ></property>
+					<!--运用的springsecurity的加密-->
+					<property name="passwordEncoders" ref="passwordEncoder" ></property>
+				</bean>
+				
+				
+			</list>
+		</property>
+	</bean>
+
+    <!-- 数据库配置,需要在cas服务端加入mysql的jar包 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+	<!-- 密码加密方式采用springsecurity的加密 -->
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+
+    <sec:user-service id="userDetailsService">
+        <sec:user name="@@THIS SHOULD BE REPLACED@@" password="notused" authorities="ROLE_ADMIN" />
+    </sec:user-service>
+	
+	<bean id="attributeRepository" class="org.jasig.services.persondir.support.StubPersonAttributeDao">
+		<property name="backingMap">
+			<map>
+				<entry key="uid" value="uid" />
+				<entry key="eduPersonAffiliation" value="eduPersonAffiliation" /> 
+				<entry key="groupMembership" value="groupMembership" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean
+		id="serviceRegistryDao"
+        class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl">
+            <property name="registeredServices">
+                <list>
+                    <bean class="org.jasig.cas.services.RegexRegisteredService">
+                        <property name="id" value="0" />
+                        <property name="name" value="HTTP and IMAP" />
+                        <property name="description" value="Allows HTTP(S) and IMAP(S) protocols" />
+                        <property name="serviceId" value="^(https?|imaps?)://.*" />
+                        <property name="evaluationOrder" value="10000001" />
+                    </bean>
+                   
+                </list>
+            </property>
+        </bean>
+
+  <bean id="auditTrailManager" class="com.github.inspektr.audit.support.Slf4jLoggingAuditTrailManager" />
+  
+  <bean id="healthCheckMonitor" class="org.jasig.cas.monitor.HealthCheckMonitor">
+    <property name="monitors">
+      <list>
+        <bean class="org.jasig.cas.monitor.MemoryMonitor"
+            p:freeMemoryWarnThreshold="10" />
+        <bean class="org.jasig.cas.monitor.SessionMonitor"
+            p:ticketRegistry-ref="ticketRegistry"
+            p:serviceTicketCountWarnThreshold="5000"
+            p:sessionCountWarnThreshold="100000" />
+      </list>
+    </property>
+  </bean>
+</beans>
