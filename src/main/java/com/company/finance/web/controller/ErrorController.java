@@ -53,4 +53,16 @@ public class ErrorController {
         return "error/error";
     }
 	
+	/**
+	 * CAS认证失败
+	 * @param errorCode
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/casAuthFailure", method = RequestMethod.GET)
+	public String casAuthFailure(@PathVariable Integer errorCode,HttpServletRequest request,ModelMap model) {
+		return "casAuthFailure";
+	}
+	
 }

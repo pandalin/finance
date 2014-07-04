@@ -52,6 +52,11 @@
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher
 		</listener-class>
 	</listener>
+	
+	<!-- cas session注销 -->
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
 
 	<!-- spring character filter乱码处理 -->
 	<filter>

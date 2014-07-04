@@ -62,6 +62,11 @@ public class LoginController extends BaseController{
 		return "login";
 	}
 	
+	@RequestMapping(value = "/sessionExpired", method = RequestMethod.GET)
+	public String sessionExpired(ModelMap model) {
+		return "sessionExpired";
+	}
+	
 
 	
 	

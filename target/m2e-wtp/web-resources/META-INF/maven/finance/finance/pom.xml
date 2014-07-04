@@ -376,6 +376,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- CAS JDBC -->
+		<!-- <dependency>
+			<groupId>org.jasig.cas</groupId>
+			<artifactId>cas-server-support-jdbc</artifactId>
+			<version>3.5.2</version>
+		</dependency> -->
 
 		<!-- junit 测试包 -->
 		<dependency>

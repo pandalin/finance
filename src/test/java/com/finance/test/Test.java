@@ -11,8 +11,9 @@ public class Test {
 	
 	private AntPathMatcher	urlMatcher	= new AntPathMatcher();
 	
+	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	
 	public String encode(String password) {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		password = encoder.encode(password);
 		logger.info(password);
 		return password;
@@ -20,7 +21,10 @@ public class Test {
 	
 	@org.junit.Test
 	public void test() {
-		encode("admin");
+		String str1 = encode("admin");
+		logger.info("str1"+str1);
+		logger.info("-------"+encoder.matches("admin", str1));
+		
 	}
 	
 	@org.junit.Test
