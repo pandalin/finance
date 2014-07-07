@@ -55,7 +55,7 @@ $(document).ready(function() {
 					ulElem.addClass('expand');
 				} 
 				//destroy cookie,这里必须加上path,否则不能删除	
-				$.cookie(COOKIE_NAME,null,{path:'/'});
+				//$.cookie(COOKIE_NAME,null,{path:'/'});
 			}
 		});
 	}	
@@ -320,6 +320,7 @@ jQuery.ajaxData=function(options,successfn) {
 		
 		var data = options.data || {"date": new Date().getTime()};
 		$.ajax({
+			cache:options.cache || false,
 			async:options.async || false,
 			type: options.type || "POST",
 			data: data,
@@ -348,6 +349,7 @@ jQuery.ajaxAction=function(options,successfn) {
 	if(options.url) {
 		var data = options.data || {"date": new Date().getTime()};
 		$.ajax({
+			cache:options.cache || false,
 	    	async:options.async || false,
 	        type: options.type  || "POST",
 	        data: data,

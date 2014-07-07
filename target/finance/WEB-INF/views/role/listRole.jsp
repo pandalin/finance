@@ -104,11 +104,16 @@
 							<tr class="odd gradeX">
 								<td>${r.role_code }</td>
 								<td>${r.role_name }</td>
-								<td>${r.status }</td>
+								<td>
+									<c:if test="${r.role_status==0 }">启用 </c:if> 
+									<c:if test="${r.role_status==1 }">禁用</c:if>
+								</td>
 								<td>
 									<div class="controls center">
-										<sec:authorize ifAnyGranted="AUTH_ADMIN">
+										<sec:authorize ifAnyGranted="AUTH_ADMIN,AUTH_ASSIGN_AUTH">
 											<a href="javascript:void(0);" onclick="addRoleAuth('${r.id }');" class="btip" title="分配权限"><span  class="icon12 icomoon-icon-pen-2"></span></a>
+										</sec:authorize>
+										<sec:authorize ifAnyGranted="AUTH_ADMIN">
 											<a href="<c:url value="/role/toEdit/${r.id }"/>" class="btip" title="修改"><span  class="icon12 icomoon-icon-pencil"></span></a>
 											<a href="<c:url value="/role/toDel/${r.id }"/>"  class="btip" title="删除"><span class="icon12 icomoon-icon-remove"></span></a>
 										</sec:authorize>

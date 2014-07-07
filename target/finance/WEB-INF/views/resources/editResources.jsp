@@ -34,7 +34,7 @@ $(document).ready(function() {
 	    		resource_desc: "required",
 	    		resource_name: {
 					required: true,
-					minlength: 4
+					minlength: 2
 				},
 				resource_type: {
 					required: true
@@ -54,7 +54,7 @@ $(document).ready(function() {
 				required: "Please enter something",
 				resource_name: {
 					required: "Please enter something",
-					minlength: "This field must consist of at least 4 characters"
+					minlength: "This field must consist of at least 2 characters"
 				},
 				resource_type: {
 					required: "Please select a type"
@@ -109,9 +109,9 @@ $(document).ready(function() {
 									<label class="form-label span3 left" for="required">资源类型</label> 
 									<div class="span4 controls sel">
 									<select id="resource_type" name="resource_type" class="nostyle" style="width:365px;">
-										<option value="URL" <c:if test="${resource_type eq 'URL' }">selected="selected"</c:if>>URL</option>
-										<option value="MENU" <c:if test="${resource_type eq 'MENU' }">selected="selected"</c:if>>菜单</option>
-										<option value="BUTTON" <c:if test="${resource_type eq 'BUTTON' }">selected="selected"</c:if>>按钮</option>
+										<option value="MENU_1" <c:if test="${resource_type eq 'MENU_1' }">selected="selected"</c:if>>一级菜单</option>
+										<option value="MENU_2" <c:if test="${resource_type eq 'MENU_2' }">selected="selected"</c:if>>二级菜单</option>
+										<option value="BUTTON" <c:if test="${resource_type eq 'BUTTON' }">selected="selected"</c:if>>菜单按钮</option>
 									</select>
 									</div>
 								</div>

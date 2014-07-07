@@ -22,10 +22,11 @@
                             <a href="#" class="dropdown-toggle avatar">
                     		<span class="icon16 icomoon-icon-user-2"></span>
                                 <span class="txt">${sessionScope.CURRENT_USER.user_name }</span>
-                                <%-- <span class="txt"><sec:authentication property="principal.user.user_name"/> </span> --%>
+                                <span class="txt"><sec:authentication property="principal.user.user_name"/> </span>
                             </a>
                         </li>
                         <li><a href="<c:url value="/j_spring_security_logout" />"><span class="icon16 icomoon-icon-exit"></span> 退出</a></li>
+                        <li><a href="<c:url value="/j_spring_cas_security_logout" />"><span class="icon16 icomoon-icon-exit"></span> 单点登录退出</a></li>
                     </ul>
                 </div><!-- /.nav-collapse -->
               </div>

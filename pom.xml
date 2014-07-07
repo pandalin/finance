@@ -183,13 +183,13 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>${org.springframework.security}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-cas</artifactId>
 			<version>${org.springframework.security}</version>
 		</dependency>
-		
+
 		<!-- mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -210,13 +210,9 @@
 		</dependency>
 
 		<!-- tomcat servlet开发包 -->
-		<!-- <dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency> -->
-		
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>3.1.0</version> <scope>provided</scope> </dependency> -->
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -376,12 +372,16 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<!-- CAS JDBC -->
+		<!-- <dependency> <groupId>org.jasig.cas</groupId> <artifactId>cas-server-support-jdbc</artifactId> 
+			<version>3.5.2</version> </dependency> -->
+
+
 		<!-- <dependency>
-			<groupId>org.jasig.cas</groupId>
-			<artifactId>cas-server-support-jdbc</artifactId>
-			<version>3.5.2</version>
+			<groupId>org.tuckey</groupId>
+			<artifactId>urlrewritefilter</artifactId>
+			<version>4.0.3</version>
 		</dependency> -->
 
 		<!-- junit 测试包 -->

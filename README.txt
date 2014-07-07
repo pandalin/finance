@@ -42,4 +42,24 @@ springsecurity表设计采用了7张表，具体可参加finance.sql初始化语
 		 */ 
 	git：
 		http://download.tortoisegit.org/tgit
-CAS证书配置：http://www.kafeitu.me/sso/2010/11/05/sso-cas-full-course.html
+
+#*****************************cas配置************************************
+资料：http://my.oschina.net/xpbug/blog/204794
+1.CAS证书配置：http://www.kafeitu.me/sso/2010/11/05/sso-cas-full-course.html
+2.cas server,下载地址:http://www.jasig.org/cas/download
+      将cas server解压后得到modules下cas-server-webapp-3.5.2.war包部署到tomcat下,改名casserver,
+      即可访问：https://xxx.com:8443/casserver/login
+     美化casserver的界面步骤：
+     登录界面：
+     1.复制WEB-INF/view/jsp/default,重命名为mytheme
+     2.复制WEB-INF/classes/default_views.properties,重命名为mytheme_views.properties
+     3.修改其中的default为mytheme
+     4.修改WEB-INF/cas.properties中的cas.viewResolver.basename=mytheme_views
+      登录成功界面：casGenericSuccess.jsp
+      退出界面:casLoginView.jsp
+      修改验证方式可参考：spring-cas-server.xml
+3.客户端配置：
+	注意：既然是使用了httpclient发送请求，如果service url使用的是https, 那需要把不信任的证书先导入到服务器运行环境中
+	其他详见spring-security-cas.xml
+	
+ 

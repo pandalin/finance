@@ -111,19 +111,25 @@
 							<tr class="odd gradeX">
 								<td>${u.user_code }</td>
 								<td>${u.user_name }</td>
-								<td><c:if test="${u.user_status==0 }">
-										启用
-									</c:if> <c:if test="${u.user_status==1 }">
-										禁用
-									</c:if>
+								<td>
+									<c:if test="${u.user_status==0 }">启用 </c:if> 
+									<c:if test="${u.user_status==1 }">禁用</c:if>
 								</td>
 								<td><fmt:formatDate value="${u.user_date }" pattern="yyyy-MM-dd HH:mm:ss"/> </td>
 								<td>
 									<div class="controls center">
-										<sec:authorize ifAnyGranted="AUTH_ADMIN"> 
+										<sec:authorize ifAnyGranted="AUTH_ADMIN,AUTH_ASSIGN_ROLE"> 
 											<a href="javascript:void(0);" onclick="addRole('${u.user_id }');" class="btip" title="分配角色"><span  class="icon12 icomoon-icon-pen-2"></span></a>
+										</sec:authorize>	
+										<sec:authorize ifAnyGranted="AUTH_ADMIN,AUTH_USER">
 											<a href="<c:url value="/user/toEdit/${u.user_id }"/>" class="btip" title="修改"><span  class="icon12 icomoon-icon-pencil"></span></a>
+											<a href="#"  class="btip" title="修改密码"><span class="icon12 icomoon-icon-locked"></span></a>
+										</sec:authorize>	
+										<sec:authorize ifAnyGranted="AUTH_DELETE">
 											<a href="<c:url value="/user/toDel/${u.user_id }"/>"  class="btip" title="删除"><span class="icon12 icomoon-icon-remove"></span></a>
+										</sec:authorize>
+										<sec:authorize access="hasRole('AUTH_USER')">
+											<a href="#"  class="btip" title="详情"><span class="icon12 icomoon-icon-apple"></span></a>
 										</sec:authorize>
 									</div>
 								</td>

@@ -20,7 +20,7 @@
         <ul class="breadcrumb">
             <li>您的位置<span class="divider">></span></li>
             <li>资源设置<span class="divider">></span></li>
-            <li class="active"><a href="<c:url value="/resources/listResources/%25/%25"/>" class="tip">资源列表</a></li>
+            <li class="active"><a href="<c:url value="/resources/toList"/>" class="tip">资源列表</a></li>
         </ul>
 
     </div><!-- End .heading-->
@@ -46,6 +46,7 @@
 								<th>资源名称</th>
 								<th>资源类型</th>
 								<th>资源URL</th>
+								<th>父级资源</th>
 								<th>资源状态</th>
 								<th>资源描述</th>
 								<th>资源序号</th>
@@ -59,13 +60,16 @@
 							<c:forEach items="${result.content}" var="r">
 								<tr class="odd gradeX">
 									<td>${r.resource_name }</td>
-									<td>${r.resource_type }</td>
+									<td>
+										<c:if test="${r.resource_type eq 'MENU_1' }">一级菜单</c:if>
+										<c:if test="${r.resource_type eq 'MENU_2' }">二级菜单</c:if>
+										<c:if test="${r.resource_type eq 'BUTTON' }">菜单按钮</c:if>
+									</td>
 									<td>${r.resource_url }</td>
-									<td><c:if test="${r.resource_status==0 }">
-											有效
-										</c:if> <c:if test="${r.resource_status==1 }">
-											无效
-										</c:if>
+									<td>${r.parent_name }</td>
+									<td>
+										<c:if test="${r.resource_status==0 }">有效</c:if> 
+										<c:if test="${r.resource_status==1 }">无效</c:if>
 									</td>
 									<td>${r.resource_desc }</td>
 									<td>${r.resource_priority }</td>

@@ -8,16 +8,12 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.company.finance.WebContext;
-import com.company.finance.bean.User;
 
 /**
  * 
@@ -30,7 +26,7 @@ import com.company.finance.bean.User;
  * @date    2014年6月25日 上午11:14:35
  * @version v1.0
  */
-@WebFilter(filterName="loginFilter",urlPatterns={"/*"})
+//@WebFilter(filterName="loginFilter",urlPatterns={"/*"})
 public class LoginFilter implements Filter {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -46,22 +42,6 @@ public class LoginFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession session = req.getSession(false);
 		logger.debug("session"+session);
-		
-		if (!(req.getRequestURI().equals("/login")) && session == null ||  session.getAttribute(WebContext.CURRENT_USER) == null) {
-
-			req.getRequestDispatcher(req.getContextPath()+"/index.jsp").forward(req, res);
-			return;
-//			res.sendRedirect(req.getContextPath()+"/index.jsp");
-		} else {
-			
-			Object object = session.getAttribute(WebContext.CURRENT_USER);
-			if (object != null) {
-				User user = (User) object;
-				logger.debug(user.getUser_name());
-			}
-			
-			chain.doFilter(req, res);
-		}
 		
 	}
 

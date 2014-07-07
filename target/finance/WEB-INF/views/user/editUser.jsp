@@ -91,7 +91,7 @@ $(document).ready(function() {
 				<div class="content">
 
 					<form class="form-horizontal" id="form-validate" action="<c:url value="/user/addUser" />" method="post">
-						<input type="hidden" name="id" value="${user.user_id }" />
+						<input type="hidden" name="user_id" value="${user.user_id }" />
 						<div class="form-row row-fluid">
 							<div class="span12">
 								<div class="row-fluid">
@@ -108,27 +108,29 @@ $(document).ready(function() {
 								</div>
 							</div>
 						</div>
-						<div class="form-row row-fluid">
-							<div class="span12">
-								<div class="row-fluid">
-									<label class="form-label span3 left" for="required">密码</label>
-									<input class="span4" id="password" name="user_password" type="password" placeholder="Enter your password" /> 
+						<c:if test="${empty user.user_id}">
+							<div class="form-row row-fluid">
+								<div class="span12">
+									<div class="row-fluid">
+										<label class="form-label span3 left" for="required">密码</label>
+										<input class="span4" id="password" name="user_password" type="password" placeholder="Enter your password" /> 
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row row-fluid">
-							<div class="span12">
-								<div class="row-fluid">
-									<label class="form-label span3 left" for="required">确认密码</label>
-									<input class="span4" id="passwordConfirm" name="confirm_password" type="password" placeholder="Enter your password again" />
+							<div class="form-row row-fluid">
+								<div class="span12">
+									<div class="row-fluid">
+										<label class="form-label span3 left" for="required">确认密码</label>
+										<input class="span4" id="passwordConfirm" name="confirm_password" type="password" placeholder="Enter your password again" />
+									</div>
 								</div>
 							</div>
-						</div>
+						</c:if>
 						<div class="form-row row-fluid">
 							<div class="span12">
 								<div class="row-fluid">
 									<label class="form-label span3 left" for="normal">生日</label>
-									<input class="span4 Wdate" id="birthday" name="birthday" type="text" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})" /> 
+									<input class="span4 Wdate" id="birthday" name="birthday" type="text" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',skin:'whyGreen'})"/> 
 								</div>
 							</div>
 						</div>

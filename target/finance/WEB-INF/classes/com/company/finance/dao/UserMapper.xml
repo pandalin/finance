@@ -27,6 +27,17 @@
 		)
 	</insert>
 	
+	<update id="modifyEntity" parameterType="com.company.finance.bean.User">
+		update pub_user
+		<set>
+			<if test="user_name!=null and user_name !=''">user_name=#{user_name},</if>
+			<if test="user_password!=null and user_password !=''">user_password=#{user_password},</if>
+			<if test="user_status!=null">user_status=#{user_status},</if>
+			<if test="user_date!=null">user_date=#{user_date}</if>
+		</set>
+		where user_id=#{user_id}
+	</update>
+	
 	<delete id="deleteEntity" parameterType="String">
 		delete from pub_user where user_id=#{userid}
 	</delete>

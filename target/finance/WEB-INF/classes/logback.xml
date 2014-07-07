@@ -35,9 +35,11 @@
 	 <!-- <logger name="org.springframework" level="error" /> -->
 	<logger name="org.mybatis.spring" level="error" /> 
 	<logger name="org.springframework.web" level="info" /> 
+	<logger name="org.springframework.web.util" level="error" /> 
 	<logger name="org.springframework.aop" level="info" /> 
 	<logger name="org.springframework.beans" level="info" /> 
 	<logger name="org.springframework.core" level="info" /> 
 	<logger name="org.springframework.security" level="debug" /> 
+	<logger name="org.springframework.security.web.util" level="error" /> 
 	<logger name="net.sf.ehcache" level="error" /> 
 </configuration>

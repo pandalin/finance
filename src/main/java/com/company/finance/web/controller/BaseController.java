@@ -7,6 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.jasig.cas.client.util.AbstractCasFilter;
+import org.jasig.cas.client.validation.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
@@ -70,6 +75,18 @@ public abstract class BaseController {
 		}
 
 		return (principal == null) ? "" : principal.toString();
+	}
+	
+	/**
+	 * 这里获取不到,暂时不知道如何处理
+	 * @param request
+	 * @return
+	 */
+	protected String getCASUserName(HttpServletRequest request) {
+		final HttpSession session = request.getSession(false);
+        final Assertion assertion = (Assertion) (session == null ? request.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION) : session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION));
+
+		return assertion.getPrincipal().getName();
 	}
 
 	/**

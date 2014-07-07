@@ -33,7 +33,7 @@
 		<param-value>
 			classpath:spring/spring-context.xml,
 			classpath:spring/spring-db.xml,
-			classpath:spring/spring-security.xml
+			classpath:spring/spring-security-cas.xml
 		</param-value>
 	</context-param>
 
@@ -47,10 +47,15 @@
 		<listener-class>org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
-	
+
 	<listener>
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher
 		</listener-class>
+	</listener>
+	
+	<!-- cas session注销 -->
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
 	</listener>
 
 	<!-- spring character filter乱码处理 -->
@@ -114,38 +119,18 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 
-	<!-- 错误页面映射,用springmvc重定向,解决sitemesh无法装饰错误页面的问题 -->
-	<!-- <error-page> <error-code>404</error-code> <location>/error/404</location> 
-		</error-page> <error-page> <error-code>400</error-code> <location>/error/400</location> 
-		</error-page> <error-page> <error-code>500</error-code> <location>/error/500</location> 
-		</error-page> <error-page> <error-code>503</error-code> <location>/error/503</location> 
+	<!-- servlet3课不写error-code -->
+	<error-page>
+		<location>/WEB-INF/views/error/error.jsp</location>
+	</error-page>
+
+	<!-- <error-page> <error-code>400</error-code> <location>/WEB-INF/views/error/error.jsp</location> 
+		</error-page> <error-page> <error-code>404</error-code> <location>/WEB-INF/views/error/error.jsp</location> 
+		</error-page> <error-page> <error-code>405</error-code> <location>/WEB-INF/views/error/error.jsp</location> 
+		</error-page> <error-page> <error-code>500</error-code> <location>/WEB-INF/views/error/error.jsp</location> 
+		</error-page> <error-page> <error-code>503</error-code> <location>/WEB-INF/views/error/error.jsp</location> 
 		</error-page> <error-page> <exception-type>java.lang.Exception</exception-type> 
 		<location>/WEB-INF/views/error/error.jsp</location> </error-page> -->
-
-	<error-page>
-		<error-code>400</error-code>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>405</error-code>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>503</error-code>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
-	<error-page>
-		<exception-type>java.lang.Exception</exception-type>
-		<location>/WEB-INF/views/error/error.jsp</location>
-	</error-page>
 
 	<!--druid 监控 -->
 	<filter>
