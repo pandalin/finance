@@ -34,7 +34,6 @@ springsecurity表设计采用了7张表，具体可参加finance.sql初始化语
 		/**  
 		 * <p> 
 		 *  ${todo}
-		 * </p>
 		 *
 		 * @author  linxiaomin@sina.cn  
 		 * @date    ${date} ${time}
