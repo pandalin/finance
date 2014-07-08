@@ -52,7 +52,7 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:default-servlet-handler/>
-	<mvc:resources location="/common/" mapping="/common/**"/>
+	<mvc:resources location="/common/" mapping="/common/**" cache-period="31556926"/>
 	
     
     <!-- 内容协商管理器  -->
