@@ -60,6 +60,7 @@
                             <ul class="sub">
                                 <li><a href="<c:url value="/consume/toEdit/%25"/>"><span class="icon16 icomoon-icon-apple"></span>新增消费</a></li>
                                 <li><a href="<c:url value="/consume/listConsume/%25/%25"/>"><span class="icon16 icomoon-icon-apple"></span>消费列表</a></li>
+                                <li><a href="<c:url value="/upload/toupload"/>"><span class="icon16 icomoon-icon-apple"></span>文件上传</a></li>
                             </ul>
                         </li>
                         <li>
